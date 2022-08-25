@@ -1,5 +1,7 @@
 predict.py - This is the main script.
+
 matrix.csv - Add the distances matrix here.
+
 img.jpg - This is the image that will be used by the main script.
 
 Please install the required dependencies before proceeding:
