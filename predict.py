@@ -26,7 +26,7 @@ DISTANCE_THRESHOLD = 10
 MATRIX_SIZE_X = 4
 MATRIX_SIZE_Y = 4
 
-with open('matrix.csv', 'r') as read_obj:
+with open('distance_matrix.csv', 'r') as read_obj:
 
     # Return a reader object which will
     # iterate over lines in the given csvfile
@@ -37,6 +37,11 @@ with open('matrix.csv', 'r') as read_obj:
     for i in range(MATRIX_SIZE_X):
         for j in range(MATRIX_SIZE_Y):
             dist_data[i][j] = int(dist_data[i][j])
+
+sensor_matrix = [[(11, 22), (11, 22), (11, 22), (11, 22)],
+                 [(11, 22), (11, 22), (11, 22), (11, 22)],
+                 [(11, 22), (11, 22), (11, 22), (11, 22)],
+                 [(11, 22), (11, 22), (11, 22), (11, 22)]]
 
 dist_and_coord = []
 obj_count = 0
@@ -62,9 +67,8 @@ def dist_and_coordinates(size):
     for i in range(4):
         dist_and_coord.append([])
         for j in range(4):
-            dist_and_coord[i].append(
-                (l * (j + 1) / (MATRIX_SIZE_X + 1),
-                 h * (i + 1) / (MATRIX_SIZE_Y + 1), dist_data[i][j]))
+            dist_and_coord[i].append((sensor_matrix[i][j][0],
+                                      sensor_matrix[i][j][1], dist_data[i][j]))
 
 
 class Inferer:
@@ -316,9 +320,13 @@ for *xyxy, conf, cls in reversed(det):
         obj_count += 1
 
 image = np.asarray(img_src)
+# total_area = img_src.shape[0]*img_src.shape[1]
+# per_obj_area = total_area/13
 
 if args['save-img']:
     image_name = 'img_output.jpg'
     cv2.imwrite(os.path.join("./", image_name), image)
     print("Image has been saved successfully.")
-    print("Object Count:", obj_count)
+    print("No of people that can be accomodated:", 13 - obj_count)
+    print("Percentage of volume that is unoccupied:",
+          (13 - obj_count) * 100 / 13)
